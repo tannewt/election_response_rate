@@ -31,6 +31,8 @@ for panel in requesters.find_all("div", class_="panel"):
 
         election_name = election_name.text.strip()
         print(election_name)
+        month, _, election_type = election_name.split(" ", maxsplit=2)
+        election_type = election_type.lower()
         results_link = section.find("a", string="Results")
         if results_link is None:
             # If no results link, then check the section itself
@@ -91,7 +93,8 @@ for panel in requesters.find_all("div", class_="panel"):
                     last_contest["Total Votes"] = first_votes
                     
                     last_contest["Election Year"] = year
-                    last_contest["Election"] = election_name
+                    last_contest["Election Month"] = month
+                    last_contest["Election Type"] = election_type
                 else:
                     last_contest["Total Votes"] += int(row["Votes"])
             all_contests.append(last_contest)
@@ -104,7 +107,8 @@ for panel in requesters.find_all("div", class_="panel"):
                     contest_data["Total Votes"] = 0
                     contest_data["Registered Voters for District"] = 0
                     contest_data["Election Year"] = year
-                    contest_data["Election"] = election_name
+                    last_contest["Election Month"] = month
+                    last_contest["Election Type"] = election_type
                     contest_data["GEMS Contest ID"] = row["Race"]
                     contests_by_name[contest] = contest_data
                     all_contests.append(contest_data)
